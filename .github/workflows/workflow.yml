@@ -14,20 +14,30 @@ jobs:
           fetch-depth: 0 # Fetch all history for accurate results of code analysis
 
       - name: Install required tools
-        run: # Write the commands to install ReportGenerator and Stryker into your pipeline.
+        run: | 
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+          dotnet tool install --global dotnet-stryker
 
       - name: Run unit tests
-        run: # Write a command to execute unit tests while collecting code coverage
-        
+        run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
+
       - name: Generate report
-        run: # Use the ReportGenerator tool to generate a report from the code coverage results
+        run: reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:coverage-report -reporttypes:Html
 
       - name: Run Mutation Tests
-        run: # Write a command to execute mutation tests using Stryker with a threshold of 80% mutation score
+        run: dotnet stryker --threshold-high 80
 
       - name: Collect Coverage Report
-        # Complete this step sp it uploads the coverage report to the artifacts - make it run always even if previous steps fail
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: coverage-report
 
       - name: Collect Stryker Report
-        # Complete this step so it uploads the Stryker report to the artifacts - make it run always even if previous steps fail
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: mutation-test-report
+          path: StrykerOutput
     
