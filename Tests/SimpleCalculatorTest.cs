@@ -18,4 +18,80 @@ public class SimpleCalculatorTest
         // Assert
         Assert.That(result, Is.EqualTo(5));
     }
+
+    [Test]
+    public void Subtract()
+    {
+        // Arrange
+        var calc = new SimpleCalculator();
+        var a = 2;
+        var b = 3;
+        
+        // Act
+        var result = calc.Subtract(a, b);
+        
+        // Assert
+        Assert.That(result, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void Multiply()
+    {
+        // Arrange
+        var calc = new SimpleCalculator();
+        var a = 2;
+        var b = 3;
+        
+        // Act
+        var result = calc.Multiply(a, b);
+        
+        // Assert
+        Assert.That(result, Is.EqualTo(6));
+    }
+    
+    [Test]
+    public void Divide()
+    {
+        // Arrange
+        var calc = new SimpleCalculator();
+        var a = 6;
+        var b = 3;
+        
+        // Act
+        var result = calc.Divide(a, b);
+        
+        // Assert
+        Assert.That(result, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Factorial()
+    {
+        // Arrange
+        var calc = new SimpleCalculator();
+        var a = 3;
+        
+        // Act
+        var result = calc.Factorial(a);
+        
+        // Assert
+        Assert.That(result, Is.EqualTo(6));
+    }
+
+    [Test]
+    public void isPrime()
+    {
+        // Arrange
+        var calc = new SimpleCalculator();
+        var primeNumber = 7;
+        var notPrimeNumber = 8;
+
+        // Act
+        var primeResult = calc.IsPrime(primeNumber);
+        var notPrimeResult = calc.IsPrime(notPrimeNumber);
+
+        // Assert
+        Assert.That(primeResult, Is.True);
+        Assert.That(notPrimeResult, Is.False);
+    }
 }
