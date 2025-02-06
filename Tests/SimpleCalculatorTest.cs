@@ -63,6 +63,13 @@ public class SimpleCalculatorTest
         // Assert
         Assert.That(result, Is.EqualTo(2));
     }
+    
+    [Test]
+    public void Divide_ByZero_ShouldThrowException()
+    {
+        var calc = new SimpleCalculator();
+        Assert.Throws<DivideByZeroException>(() => calc.Divide(10, 0));
+    }
 
     [Test]
     public void Factorial()
@@ -76,6 +83,20 @@ public class SimpleCalculatorTest
         
         // Assert
         Assert.That(result, Is.EqualTo(6));
+    }
+    
+    [Test]
+    public void Factorial_OfZero_ShouldReturnOne()
+    {
+        var calc = new SimpleCalculator();
+        Assert.That(calc.Factorial(0), Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void Factorial_Negative_ShouldThrowException()
+    {
+        var calc = new SimpleCalculator();
+        Assert.Throws<ArgumentException>(() => calc.Factorial(-5));
     }
 
     [Test]
@@ -93,5 +114,23 @@ public class SimpleCalculatorTest
         // Assert
         Assert.That(primeResult, Is.True);
         Assert.That(notPrimeResult, Is.False);
+    }
+    
+    [Test]
+    public void IsPrime_ShouldReturnFalseForNegativeNumbers()
+    {
+        var calc = new SimpleCalculator();
+        Assert.That(calc.IsPrime(-1), Is.False);
+        Assert.That(calc.IsPrime(-5), Is.False);
+        Assert.That(calc.IsPrime(-10), Is.False);
+    }
+
+    [Test]
+    public void IsPrime_ShouldHandleEdgeCases()
+    {
+        var calc = new SimpleCalculator();
+        Assert.That(calc.IsPrime(0), Is.False);
+        Assert.That(calc.IsPrime(1), Is.False);
+        Assert.That(calc.IsPrime(2), Is.True);
     }
 }
