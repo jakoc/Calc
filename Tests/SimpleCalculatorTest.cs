@@ -11,10 +11,10 @@ public class SimpleCalculatorTest
         var calc = new SimpleCalculator();
         var a = 2;
         var b = 3;
-        
+
         // Act
         var result = calc.Add(a, b);
-        
+
         // Assert
         Assert.That(result, Is.EqualTo(5));
     }
@@ -26,10 +26,10 @@ public class SimpleCalculatorTest
         var calc = new SimpleCalculator();
         var a = 2;
         var b = 3;
-        
+
         // Act
         var result = calc.Subtract(a, b);
-        
+
         // Assert
         Assert.That(result, Is.EqualTo(-1));
     }
@@ -41,14 +41,14 @@ public class SimpleCalculatorTest
         var calc = new SimpleCalculator();
         var a = 2;
         var b = 3;
-        
+
         // Act
         var result = calc.Multiply(a, b);
-        
+
         // Assert
         Assert.That(result, Is.EqualTo(6));
     }
-    
+
     [Test]
     public void Divide()
     {
@@ -56,14 +56,14 @@ public class SimpleCalculatorTest
         var calc = new SimpleCalculator();
         var a = 6;
         var b = 3;
-        
+
         // Act
         var result = calc.Divide(a, b);
-        
+
         // Assert
         Assert.That(result, Is.EqualTo(2));
     }
-    
+
     [Test]
     public void Divide_ByZero_ShouldThrowException()
     {
@@ -77,21 +77,21 @@ public class SimpleCalculatorTest
         // Arrange
         var calc = new SimpleCalculator();
         var a = 3;
-        
+
         // Act
         var result = calc.Factorial(a);
-        
+
         // Assert
         Assert.That(result, Is.EqualTo(6));
     }
-    
+
     [Test]
     public void Factorial_OfZero_ShouldReturnOne()
     {
         var calc = new SimpleCalculator();
         Assert.That(calc.Factorial(0), Is.EqualTo(1));
     }
-    
+
     [Test]
     public void Factorial_Negative_ShouldThrowException()
     {
@@ -112,25 +112,36 @@ public class SimpleCalculatorTest
         var notPrimeResult = calc.IsPrime(notPrimeNumber);
 
         // Assert
-        Assert.That(primeResult, Is.True);
-        Assert.That(notPrimeResult, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(primeResult, Is.True);
+            Assert.That(notPrimeResult, Is.False);
+        });
     }
-    
+
     [Test]
     public void IsPrime_ShouldReturnFalseForNegativeNumbers()
     {
         var calc = new SimpleCalculator();
-        Assert.That(calc.IsPrime(-1), Is.False);
-        Assert.That(calc.IsPrime(-5), Is.False);
-        Assert.That(calc.IsPrime(-10), Is.False);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(calc.IsPrime(-1), Is.False);
+            Assert.That(calc.IsPrime(-5), Is.False);
+            Assert.That(calc.IsPrime(-10), Is.False);
+        });
     }
 
     [Test]
     public void IsPrime_ShouldHandleEdgeCases()
     {
         var calc = new SimpleCalculator();
-        Assert.That(calc.IsPrime(0), Is.False);
-        Assert.That(calc.IsPrime(1), Is.False);
-        Assert.That(calc.IsPrime(2), Is.True);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(calc.IsPrime(0), Is.False);
+            Assert.That(calc.IsPrime(1), Is.False);
+            Assert.That(calc.IsPrime(2), Is.True);
+        });
     }
 }

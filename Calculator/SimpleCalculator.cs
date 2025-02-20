@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Calculator;
+﻿namespace Calculator;
 
 public class SimpleCalculator : BascisCalculator
 {
-   
 }
