@@ -12,7 +12,7 @@ public class CachedCalculator : BascisCalculator
         if (_cache.TryGetValue(key, out var cachedValue))
             return (T)cachedValue;
 
-        var result = calculation();
+        var result = calculation() ?? throw new InvalidOperationException($"Calculation returned null for {key}");
         _cache[key] = result;
         return result;
     }
