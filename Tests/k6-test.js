@@ -9,7 +9,7 @@ export const options = {
 };
 
 export default function () {
-    let res = http.get('https://129.151.223.141/api/calculator/history');
+    let res = http.get('http://129.151.223.141/api/calculator/history');
     check(res, {
         'API svarede med 200': (r) => r.status === 200,
         'Svartid under 500ms': (r) => r.timings.duration < 500,

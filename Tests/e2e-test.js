@@ -1,8 +1,9 @@
 ﻿import { Selector } from 'testcafe';
 
 fixture `Calculator E2E Test`
-    .page `http://129.151.223.141/index.html`;
-
+    .page `http://129.151.223.141/index.html`
+    
+//virker åbenbart ikke med chrome(åbner https://129.151.223.141/index.html og kigger påden), firefox virker
 test('Beregning gemmes korrekt', async t => {
     await t
         .click(Selector('button').withText('5'))

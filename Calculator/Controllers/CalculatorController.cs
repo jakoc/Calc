@@ -29,29 +29,57 @@ namespace Calculator.Controllers
             double result;
             try
             {
+                Console.WriteLine("Starting calculation for expression: " + request.Expression);
                 result = request.CalculatorType == "cached"
                     ? EvaluateExpression(_cachedCalculator, request.Expression)
                     : EvaluateExpression(_simpleCalculator, request.Expression);
+                Console.WriteLine("Calculation result: " + result);
             }
             catch (Exception ex)
             {
-                // Logfejl
-                Console.WriteLine("Fejl under beregning: " + ex.Message);
+                Console.WriteLine("Fejl under beregning: " + ex.Message); // Denne linje giver dig mere info om fejlen
                 return BadRequest(new { error = "Beregning fejlede: " + ex.Message });
             }
 
-            // Gem beregning i databasen
-            _dbService.SaveCalculation(request.Expression, result);
+            try
+            {
+                Console.WriteLine("Saving result to database: " + result);
+                // Gem beregning i databasen
+                _dbService.SaveCalculation(request.Expression, result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Fejl under gemning i database: " + ex.Message);
+                return StatusCode(500, new { error = "Fejl under gemning i database: " + ex.Message });
+            }
+
             return Ok(new { expression = request.Expression, result });
         }
 
-
+        
         [HttpGet("history")]
         public IActionResult GetHistory()
         {
-            var history = _dbService.GetHistory();
-            return Ok(history);
+            try
+            {
+                Console.WriteLine("Henter historik..."); // Simple logning
+                var history = _dbService.GetHistory();
+                if (history == null || !history.Any())
+                {
+                    Console.WriteLine("Ingen historik fundet.");
+                    return NotFound(new { error = "Ingen historik fundet" });
+                }
+                Console.WriteLine("Historik hentet: " + history.Count() + " poster");
+                return Ok(history);
+            }
+            catch (Exception ex)
+            {
+                // Log fejlen
+                Console.WriteLine("Fejl ved hentning af historik: " + ex.Message);
+                return StatusCode(500, new { error = "Fejl ved hentning af historik" });
+            }
         }
+
 
         private static double EvaluateExpression(BascisCalculator calculator, string expression)
         {
@@ -81,10 +109,14 @@ namespace Calculator.Controllers
             };
         }
     }
+    
 
     public class CalculationRequest
     {
         public string Expression { get; set; }
         public string CalculatorType { get; set; }
     }
+    
+    
+    
 }

@@ -2,10 +2,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseWebRoot("wwwroot");
+
+builder.WebHost.UseUrls("http://129.151.223.141");
+
 
 builder.Services.AddCors(options =>
 {
@@ -21,6 +25,20 @@ builder.Services.AddCors(options =>
 // Tilføj services til DI-containeren
 builder.Services.AddControllers();
 builder.Services.AddSingleton<DatabaseService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 
 var app = builder.Build();
 
