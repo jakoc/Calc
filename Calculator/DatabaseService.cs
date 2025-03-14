@@ -8,7 +8,7 @@ public class DatabaseService
 
     public DatabaseService()
     {
-        _connectionString = "Server=localhost;Port=3306;Database=calcdb;User=user;Password=password;";
+        _connectionString = "129.151.223.141;Database=calcdb;User=user;Password=password;";
     }
 
     public void SaveCalculation(string expression, double result)
@@ -26,9 +26,9 @@ public class DatabaseService
         }
     }
 
-    public List<object> GetHistory()
+    public List<(string Expression, double Result, DateTime CreatedAt)> GetHistory()
     {
-        var history = new List<object>();
+        var history = new List<(string, double, DateTime)>();
 
         using (var connection = new MySqlConnection(_connectionString))
         {
@@ -39,15 +39,16 @@ public class DatabaseService
             {
                 while (reader.Read())
                 {
-                    history.Add(new
-                    {
-                        Expression = reader.GetString(0),
-                        Result = reader.GetDouble(1),
-                        CreatedAt = reader.GetDateTime(2).ToString("yyyy-MM-dd HH:mm:ss") // Konverterer dato til string
-                    });
+                    history.Add((reader.GetString(0), reader.GetDouble(1), reader.GetDateTime(2)));
                 }
             }
         }
         return history;
+    }
+    public class CalculationHistory
+    {
+        public string Expression { get; set; }
+        public double Result { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

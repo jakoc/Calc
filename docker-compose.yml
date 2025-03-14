@@ -22,7 +22,12 @@ services:
       - mariadb
     volumes:
       - ./db/migrations:/flyway/sql
-    command: -url=jdbc:mariadb://mariadb:3306/calcdb -user=user -password=password migrate
+    environment:
+      - FLYWAY_URL=jdbc:mariadb://mariadb:3306/calcdb
+      - FLYWAY_USER=user
+      - FLYWAY_PASSWORD=password
+    command: migrate
+
 
 volumes:
   mariadb_data:
