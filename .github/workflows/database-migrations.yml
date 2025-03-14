@@ -16,6 +16,8 @@ jobs:
           MYSQL_DATABASE: calcdb
           MYSQL_USER: user
           MYSQL_PASSWORD: password
+        volumes:
+          - ./my_custom.cnf:/etc/mysql/conf.d/my_custom.cnf
         ports:
           - "3306:3306"
         options: >-
