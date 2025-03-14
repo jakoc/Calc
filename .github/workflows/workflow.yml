@@ -40,4 +40,52 @@ jobs:
         with:
           name: mutation-test-report
           path: StrykerOutput
-    
+          
+          
+  deploy:
+    needs: integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy til Staging Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            cd /var/www/calculator
+            git pull origin main
+            dotnet build
+            systemctl restart calculator
+          EOF
+
+  load_test: #k6
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Installer K6
+        run: sudo apt-get update && sudo apt-get install -y k6
+
+      - name: Kør K6 Load Test
+        run: k6 run tests/k6-test.js
+  
+  
+  e2e_test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Installer TestCafé
+        run: npm install -g testcafe
+
+      - name: Kør E2E test
+        run: testcafe chrome tests/e2e-test.js
+      

@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lommeregner</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .calculator { display: inline-block; border: 2px solid black; padding: 20px; border-radius: 10px; }
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        button { padding: 20px; font-size: 20px; }
+        input { width: 100%; padding: 10px; font-size: 20px; text-align: right; }
+        .history-container {
+            width: 20%;
+            margin: 20px auto; 
+        }
+    </style>
+</head>
+<body>
+
+<h1>Lommeregner</h1>
+<div>
+    <label for="calculatorType">Vælg lommeregner:</label>
+    <select id="calculatorType">
+        <option value="simple">Simple</option>
+        <option value="cached">Cached</option>
+    </select>
+</div>
+
+<div class="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+        <button onclick="press('7')">7</button>
+        <button onclick="press('8')">8</button>
+        <button onclick="press('9')">9</button>
+        <button onclick="press('+')">+</button>
+
+        <button onclick="press('4')">4</button>
+        <button onclick="press('5')">5</button>
+        <button onclick="press('6')">6</button>
+        <button onclick="press('-')">-</button>
+
+        <button onclick="press('1')">1</button>
+        <button onclick="press('2')">2</button>
+        <button onclick="press('3')">3</button>
+        <button onclick="press('*')">*</button>
+
+        <button onclick="press('0')">0</button>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="press('/')">/</button>
+    </div>
+</div>
+
+<div class="history-container">
+    <h2>Historik</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Udtryk</th>
+            <th>Resultat</th>
+            <th>Oprettet</th>
+        </tr>
+        </thead>
+        <tbody id="history"></tbody>
+    </table>
+</div>
+
+<script>
+    function press(value) {
+        document.getElementById("display").value += value;
+    }
+
+    function clearDisplay() {
+        document.getElementById("display").value = "";
+    }
+
+    async function calculate() {
+        let expression = document.getElementById("display").value;
+        let calculatorType = document.getElementById("calculatorType").value;
+
+        if (!expression) {
+            alert("Indtast et udtryk!");
+            return;
+        }
+
+        let response = await fetch("/api/calculator/calculate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ expression, calculatorType })
+        });
+
+        if (!response.ok) {
+            let errorText = await response.json();
+            alert("Fejl: " + errorText.error);
+            return;
+        }
+
+        let data = await response.json();
+        document.getElementById("display").value = data.result;
+        loadHistory();
+    }
+
+    async function loadHistory() {
+        let response = await fetch("/api/calculator/history");
+
+        if (!response.ok) {
+            document.getElementById("history").innerHTML = "<tr><td colspan='3'>Fejl ved hentning af historik</td></tr>";
+            return;
+        }
+
+        let history = await response.json();
+        console.log("History data received:", history); // Debugging
+
+        let table = document.getElementById("history");
+        table.innerHTML = "";
+
+        history.forEach(entry => {
+            console.log("Processing entry:", entry); // Debugging
+
+            let formattedDate = entry.createdAt
+                ? new Date(entry.createdAt).toLocaleString()
+                : "Ukendt dato";  // Sikrer, at der ikke er "Invalid Date"
+
+            let row = `<tr>
+            <td>${entry.expression || "Ukendt"}</td>
+            <td>${entry.result ?? "Ukendt"}</td>
+            <td>${formattedDate}</td>
+        </tr>`;
+            table.innerHTML += row;
+        });
+    }
+
+
+    loadHistory();
+</script>
+
+</body>
+</html>

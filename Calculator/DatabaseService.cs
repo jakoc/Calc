@@ -26,9 +26,9 @@ public class DatabaseService
         }
     }
 
-    public List<(string Expression, double Result, DateTime CreatedAt)> GetHistory()
+    public List<object> GetHistory()
     {
-        var history = new List<(string, double, DateTime)>();
+        var history = new List<object>();
 
         using (var connection = new MySqlConnection(_connectionString))
         {
@@ -39,7 +39,12 @@ public class DatabaseService
             {
                 while (reader.Read())
                 {
-                    history.Add((reader.GetString(0), reader.GetDouble(1), reader.GetDateTime(2)));
+                    history.Add(new
+                    {
+                        Expression = reader.GetString(0),
+                        Result = reader.GetDouble(1),
+                        CreatedAt = reader.GetDateTime(2).ToString("yyyy-MM-dd HH:mm:ss") // Konverterer dato til string
+                    });
                 }
             }
         }

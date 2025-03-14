@@ -1,31 +1,28 @@
-using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace Calculator;
+var builder = WebApplication.CreateBuilder(args);
 
-class Program
+// Tilføj services til DI-containeren
+builder.Services.AddControllers();
+builder.Services.AddSingleton<DatabaseService>();
+
+var app = builder.Build();
+
+// Gør det muligt at servere HTML, CSS og JS fra wwwroot/
+app.UseStaticFiles();
+
+// Omdiriger root "/" til index.html
+app.MapGet("/", async (context) =>
 {
-    static void Main()
-    {
-        var dbService = new DatabaseService();
+    context.Response.Redirect("/index.html");
+});
 
-        Console.WriteLine("Indtast et regneudtryk (f.eks. 5 + 3):");
-        string expression = Console.ReadLine();
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
-        Console.WriteLine("Indtast resultatet:");
-        if (double.TryParse(Console.ReadLine(), out double result))
-        {
-            dbService.SaveCalculation(expression, result);
-            Console.WriteLine("✅ Beregning gemt!");
-
-            Console.WriteLine("\n🔍 Historik:");
-            foreach (var entry in dbService.GetHistory())
-            {
-                Console.WriteLine($"{entry.Expression} = {entry.Result} (Oprettet: {entry.CreatedAt})");
-            }
-        }
-        else
-        {
-            Console.WriteLine("⚠️ Ugyldigt resultat.");
-        }
-    }
-}
+app.Run();
