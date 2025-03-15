@@ -69,7 +69,7 @@ namespace Calculator.Controllers
                     Console.WriteLine("Ingen historik fundet.");
                     return NotFound(new { error = "Ingen historik fundet" });
                 }
-                Console.WriteLine("Historik hentet: " + history.Count() + " poster");
+                Console.WriteLine("Historik hentet: " + history.Count + " poster");
                 return Ok(history);
             }
             catch (Exception ex)
@@ -113,8 +113,8 @@ namespace Calculator.Controllers
 
     public class CalculationRequest
     {
-        public string Expression { get; set; }
-        public string CalculatorType { get; set; }
+        public string? Expression { get; set; }
+        public string? CalculatorType { get; set; }
     }
     
     

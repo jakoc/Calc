@@ -10,12 +10,8 @@ public class DatabaseService
 
     public DatabaseService(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("Database");
-
-        if (string.IsNullOrEmpty(_connectionString))
-        {
-            throw new InvalidOperationException("Database connection string is not set. Please configure it in appsettings.json or environment variables.");
-        }
+        _connectionString = configuration.GetConnectionString("Database") 
+                            ?? throw new InvalidOperationException("Database connection string is not set. Please configure it in appsettings.json or environment variables.");
     }
 
     public void SaveCalculation(string expression, double result)
