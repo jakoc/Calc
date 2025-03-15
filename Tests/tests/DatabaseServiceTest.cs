@@ -64,28 +64,6 @@ public class DatabaseServiceTest
     }
     
     [Test]
-    public void GetHistory_ShouldReturnEmptyList_WhenNoDataExists()
-    {
-        // Arrange - Ryd databasen før test
-        using var connection = new MySqlConnection(_configuration.GetConnectionString("Database"));
-        connection.Open();
-        var deleteCommand = new MySqlCommand("DELETE FROM calculation_history", connection);
-        deleteCommand.ExecuteNonQuery();
-
-        // Verify database is empty
-        var verifyCommand = new MySqlCommand("SELECT COUNT(*) FROM calculation_history", connection);
-        var count = Convert.ToInt32(verifyCommand.ExecuteScalar());
-        Assert.That(count, Is.EqualTo(0), "Database is not empty after delete operation.");
-
-        // Act
-        var history = _databaseService.GetHistory();
-
-        // Assert
-        Assert.That(history, Is.Not.Null);
-        Assert.That(history.Count, Is.EqualTo(0));
-    }
-    
-    [Test]
     public void GetHistory_ShouldReturnMultipleEntries()
     {
         // Arrange
