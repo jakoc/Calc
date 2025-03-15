@@ -49,6 +49,16 @@ public class DatabaseService : IDatabaseService
         }
         return history;
     }
+    
+    public void ClearHistory()
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        connection.Open();
+        string query = "DELETE FROM calculation_history";
+        using var cmd = new MySqlCommand(query, connection);
+        cmd.ExecuteNonQuery();
+    }
+    
     public class CalculationHistory
     {
         public string? Expression { get; set; }

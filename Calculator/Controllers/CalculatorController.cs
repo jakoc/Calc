@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Calculator.Controllers 
 {
@@ -10,6 +11,7 @@ namespace Calculator.Controllers
         private readonly IDatabaseService _dbService;
         private readonly SimpleCalculator _simpleCalculator;
         private readonly CachedCalculator _cachedCalculator;
+        
 
         public CalculatorController(IDatabaseService dbService)
         {
@@ -29,27 +31,22 @@ namespace Calculator.Controllers
             double result;
             try
             {
-                Console.WriteLine("Starting calculation for expression: " + request.Expression);
                 result = request.CalculatorType == "cached"
                     ? EvaluateExpression(_cachedCalculator, request.Expression)
                     : EvaluateExpression(_simpleCalculator, request.Expression);
-                Console.WriteLine("Calculation result: " + result);
             }
             catch (Exception ex)
-            {
-                Console.WriteLine("Fejl under beregning: " + ex.Message); // Denne linje giver dig mere info om fejlen
+            { 
                 return BadRequest(new { error = "Beregning fejlede: " + ex.Message });
             }
 
             try
             {
-                Console.WriteLine("Saving result to database: " + result);
-                // Gem beregning i databasen
+                
                 _dbService.SaveCalculation(request.Expression, result);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fejl under gemning i database: " + ex.Message);
                 return StatusCode(500, new { error = "Fejl under gemning i database: " + ex.Message });
             }
 
@@ -62,21 +59,16 @@ namespace Calculator.Controllers
         {
             try
             {
-                Console.WriteLine("Henter historik..."); // Simple logning
                 var history = _dbService.GetHistory();
-                if (history == null || !history.Any())
+                if (history == null || history.Count == 0)
                 {
-                    Console.WriteLine("Ingen historik fundet.");
-                    return NotFound(new { error = "Ingen historik fundet" });
+                    return NotFound();
                 }
-                Console.WriteLine("Historik hentet: " + history.Count + " poster");
                 return Ok(history);
             }
             catch (Exception ex)
             {
-                // Log fejlen
-                Console.WriteLine("Fejl ved hentning af historik: " + ex.Message);
-                return StatusCode(500, new { error = "Fejl ved hentning af historik" });
+                return StatusCode(500);
             }
         }
 

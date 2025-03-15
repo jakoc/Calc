@@ -1,3 +1,4 @@
+using System.Reflection;
 using Calculator;
 
 namespace Tests.tests;
@@ -79,6 +80,15 @@ public class CachedCalculatorTest
     {
         Assert.Throws<ArgumentException>(() => _calc.Factorial(-5));
     }
+    
+    [Test]
+    public void Factorial_ShouldUseCache_ForLargeNumbers()
+    {
+        var result1 = _calc.Factorial(10); 
+        var result2 = _calc.Factorial(10); 
+
+        Assert.That(result1, Is.EqualTo(result2));
+    }
 
     [Test]
     public void IsPrime_ShouldReturnCachedResult_WhenCalledTwice()
@@ -116,4 +126,52 @@ public class CachedCalculatorTest
         });
         
     }
+    
+    [Test]
+    public void IsPrime_ShouldUseCache()
+    {
+        var result1 = _calc.IsPrime(101);
+        var result2 = _calc.IsPrime(101);
+
+        Assert.That(result1, Is.EqualTo(result2));
+    }
+    
+    
+    [Test]
+    public void Add_ShouldUseCache()
+    {
+        // Første kald udføres normalt
+        var result1 = _calc.Add(100, 200);
+
+        // Andet kald bør komme fra cache
+        var result2 = _calc.Add(100, 200);
+
+        Assert.That(result1, Is.EqualTo(result2), "Cache burde have gemt værdien.");
+    }
+    
+    [Test]
+    public void Add_ShouldHandleLargeNumbers()
+    {
+        var result1 = _calc.Add(int.MaxValue, -1);
+        var result2 = _calc.Add(int.MaxValue, -1);
+
+        Assert.That(result1, Is.EqualTo(result2), "Add skal kunne håndtere store tal.");
+    }
+    
+    [Test]
+    public void Multiply_ShouldUseCache()
+    {
+        var result1 = _calc.Multiply(12, 12);
+        var result2 = _calc.Multiply(12, 12);
+
+        Assert.That(result1, Is.EqualTo(result2), "Multiply bør bruge cache.");
+    }
+    
+    [Test]
+    public void Multiply_ShouldReturnZero_WhenMultiplyingByZero()
+    {
+        var result = _calc.Multiply(12345, 0);
+        Assert.That(result, Is.EqualTo(0), "Enhver værdi ganget med 0 skal være 0.");
+    }
+
 }
