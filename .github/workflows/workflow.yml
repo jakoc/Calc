@@ -57,10 +57,14 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
+            set -e  # Stop scriptet ved fejl
             cd /var/www/calculator
             git pull origin main
             dotnet build
+            sudo systemctl daemon-reload  # Sørg for at servicefilen er opdateret
             sudo systemctl restart calculator
+            sudo systemctl status calculator --no-pager
+            echo "✅ Deployment completed successfully!"
           EOF
 
   load_test: #k6
