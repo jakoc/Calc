@@ -1,9 +1,7 @@
 ﻿{
   "stryker-config": {
     "mutate": [
-      "!Program.cs" ,
-      "!Controllers/CalculatorController.cs",
-      "!DatabaseService.cs"
+      "!Program.cs" 
     ],
     "thresholds": {
       "high": 80,

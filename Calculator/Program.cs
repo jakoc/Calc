@@ -59,16 +59,14 @@ app.UseCors("AllowAll");
 app.UseStaticFiles();
 
 // Omdiriger root "/" til index.html
-app.MapGet("/", async (context) =>
+app.MapGet("/", (context) =>
 {
     context.Response.Redirect("/index.html");
+    return Task.CompletedTask;
 });
 
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 
 await app.RunAsync();

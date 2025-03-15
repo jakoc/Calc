@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace Calculator.Controllers
+namespace Calculator.Controllers 
 {
     [ApiController]
     [Route("api/calculator")]
     public class CalculatorController : ControllerBase
     {
-        private readonly DatabaseService _dbService;
+        private readonly IDatabaseService _dbService;
         private readonly SimpleCalculator _simpleCalculator;
         private readonly CachedCalculator _cachedCalculator;
 
-        public CalculatorController(DatabaseService dbService)
+        public CalculatorController(IDatabaseService dbService)
         {
             _dbService = dbService;
             _simpleCalculator = new SimpleCalculator();

@@ -18,6 +18,9 @@
         <PackageReference Include="NUnit" Version="4.3.2" />
         <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

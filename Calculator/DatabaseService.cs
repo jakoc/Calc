@@ -1,10 +1,11 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using Calculator.Controllers;
 using Microsoft.Extensions.Configuration;
 
 namespace Calculator;
-public class DatabaseService 
+public class DatabaseService : IDatabaseService
 {
     private readonly string _connectionString;
 
@@ -50,7 +51,7 @@ public class DatabaseService
     }
     public class CalculationHistory
     {
-        public string Expression { get; set; }
+        public string? Expression { get; set; }
         public double Result { get; set; }
         public DateTime CreatedAt { get; set; }
     }
