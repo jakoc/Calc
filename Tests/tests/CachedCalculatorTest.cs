@@ -1,6 +1,6 @@
 using Calculator;
 
-namespace Tests;
+namespace Tests.tests;
 
 public class CachedCalculatorTest
 {

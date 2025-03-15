@@ -1,3 +1,4 @@
+using Calculator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,9 +7,18 @@ using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseWebRoot("wwwroot");
+// Hent URL fra miljøvariabel eller appsettings.json
+var appUrl = Environment.GetEnvironmentVariable("APP_BASE_URL") ?? builder.Configuration["Application:BaseUrl"];
 
-builder.WebHost.UseUrls("http://129.151.223.141");
+if (string.IsNullOrWhiteSpace(appUrl))
+{
+    throw new InvalidOperationException("BaseUrl is not configured. Please set 'APP_BASE_URL' environment variable or 'Application:BaseUrl' in appsettings.json.");
+}
+
+Console.WriteLine($"Starter server på: {appUrl}");
+
+builder.WebHost.UseUrls(appUrl);
+
 
 
 builder.Services.AddCors(options =>
@@ -40,6 +50,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
@@ -59,4 +70,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.Run();
+
+await app.RunAsync();
+

@@ -1,14 +1,21 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
-public class DatabaseService
+namespace Calculator;
+public class DatabaseService 
 {
     private readonly string _connectionString;
 
-    public DatabaseService()
+    public DatabaseService(IConfiguration configuration)
     {
-        _connectionString = "129.151.223.141;Database=calcdb;User=user;Password=password;";
+        _connectionString = configuration.GetConnectionString("Database");
+
+        if (string.IsNullOrEmpty(_connectionString))
+        {
+            throw new InvalidOperationException("Database connection string is not set. Please configure it in appsettings.json or environment variables.");
+        }
     }
 
     public void SaveCalculation(string expression, double result)
