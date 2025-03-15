@@ -60,7 +60,7 @@ jobs:
             cd /var/www/calculator
             git pull origin main
             dotnet build
-            systemctl restart calculator
+            sudo systemctl restart calculator
           EOF
 
   load_test: #k6
