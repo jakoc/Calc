@@ -57,19 +57,13 @@ namespace Calculator.Controllers
         [HttpGet("history")]
         public IActionResult GetHistory()
         {
-            try
+            var history = _dbService.GetHistory();
+            if (history == null || !history.Any())
             {
-                var history = _dbService.GetHistory();
-                if (history == null || history.Count == 0)
-                {
-                    return NotFound();
-                }
-                return Ok(history);
+                return NotFound("No history found.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500);
-            }
+
+            return Ok(history);
         }
 
 
