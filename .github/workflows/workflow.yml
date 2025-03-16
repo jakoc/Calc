@@ -85,7 +85,7 @@ jobs:
           sudo apt-get install -y k6
 
       - name: Kør K6 Load Test
-        run: k6 run tests/k6-test.js
+        run: k6 run Tests/tests/k6-test.js
   
   
   
@@ -106,5 +106,5 @@ jobs:
         run: npm install -g testcafe
 
       - name: Kør E2E test med Firefox i headless mode
-        run: testcafe firefox:headless tests/e2e-test.js
+        run: testcafe firefox:headless Tests/tests/e2e-test.js
       
