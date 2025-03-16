@@ -46,6 +46,6 @@ public class DatabaseServiceMockTest
 
         // Assert
         Assert.That(history, Is.Not.Null);
-        Assert.That(history.Count, Is.EqualTo(2));
+        Assert.That(history, Has.Count.EqualTo(2));
     }
 }

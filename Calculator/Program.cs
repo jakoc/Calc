@@ -15,9 +15,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins("http://129.151.223.141")  // Tillad kun dette domæne
+        policy.WithOrigins("http://129.151.223.141", "https://129.151.223.141")
             .AllowAnyMethod()
             .AllowAnyHeader();
+
     });
 });
 
