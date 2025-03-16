@@ -106,5 +106,5 @@ jobs:
         run: npm install -g testcafe
 
       - name: Kør E2E test med Firefox i headless mode
-        run: testcafe firefox:headless Tests/tests/e2e-test.js
-      
+        run: testcafe firefox:headless Tests/tests/e2e-test.js --browser-init-timeout 50000
+ 
