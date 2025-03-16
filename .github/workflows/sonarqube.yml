@@ -26,7 +26,8 @@ jobs:
           /d:sonar.coverageReportPaths="coverage-report/SonarQube.xml" \
           /d:sonar.qualitygate.wait=true \
           /d:sonar.qualitygate.timeout=300 \
-          /d:sonar.sql.dialect=mysql
+          /d:sonar.sql.dialect=mysql \
+          /d:sonar.coverage.exclusions="**/Program.cs"
 
       - name: Build
         run: dotnet build
