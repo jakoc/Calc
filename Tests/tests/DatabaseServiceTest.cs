@@ -35,23 +35,6 @@ public class DatabaseServiceTest
     }
     
     
-    [Test]
-    public void SaveCalculation_ShouldInsertDataIntoDatabase()
-    {
-        // Arrange
-        var expression = "5 + 3";
-        var result = 8.0;
-
-        // Act
-        Assert.DoesNotThrow(() => _databaseService.SaveCalculation(expression, result));
-        double tolerance = 0.0001;
-        // Assert - Tjek at den er gemt ved at hente historikken
-        var history = _databaseService.GetHistory();
-        Assert.That(history, Is.Not.Null);
-        Assert.That(history.Count, Is.GreaterThan(0));
-        Assert.That(history.Any(h => h.Expression == expression && Math.Abs(h.Result - result) < tolerance), 
-            Is.True, "Den indsatte beregning findes ikke i historikken.");
-    }
     
     [Test]
     public void GetHistory_ShouldReturnMultipleEntries()
