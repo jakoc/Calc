@@ -78,13 +78,15 @@ jobs:
       - name: Installer K6
         run: |
           sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository ppa:k6io/k6
+          sudo apt-get install -y gnupg2 software-properties-common curl
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install -y k6
 
       - name: Kør K6 Load Test
         run: k6 run tests/k6-test.js
+  
   
   
   e2e_test:
@@ -94,9 +96,15 @@ jobs:
       - name: Checkout kode
         uses: actions/checkout@v4
 
+      - name: Installer nødvendige afhængigheder
+        run: |
+          sudo apt update
+          sudo apt install -y firefox
+          sudo apt install -y libx11-xcb1 libdbus-glib-1-2
+
       - name: Installer TestCafé
         run: npm install -g testcafe
 
-      - name: Kør E2E test med Firefox
-        run: testcafe firefox --headless tests/e2e-test.js
+      - name: Kør E2E test med Firefox i headless mode
+        run: testcafe firefox:headless tests/e2e-test.js
       

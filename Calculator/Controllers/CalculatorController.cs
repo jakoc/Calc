@@ -58,7 +58,7 @@ namespace Calculator.Controllers
         public IActionResult GetHistory()
         {
             var history = _dbService.GetHistory();
-            if (history == null || history.Count == 0)
+            if (history == null || !history.Any())
 
             {
                 return NotFound("No history found.");
