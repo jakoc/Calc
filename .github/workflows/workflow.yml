@@ -76,7 +76,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Installer K6
-        run: sudo apt-get update && sudo apt-get install -y k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:k6io/k6
+          sudo apt-get update
+          sudo apt-get install -y k6
 
       - name: Kør K6 Load Test
         run: k6 run tests/k6-test.js
@@ -92,6 +97,6 @@ jobs:
       - name: Installer TestCafé
         run: npm install -g testcafe
 
-      - name: Kør E2E test
-        run: testcafe chrome tests/e2e-test.js
+      - name: Kør E2E test med Firefox
+        run: testcafe firefox --headless tests/e2e-test.js
       
