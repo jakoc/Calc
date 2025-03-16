@@ -10,10 +10,10 @@ namespace Tests.tests
         [SetUp]
         public void Setup()
         {
-            // Simulerer en konfiguration med BaseUrl
-            var inMemorySettings = new Dictionary<string, string> {
+            var inMemorySettings = new Dictionary<string, string?> {
                 { "Application:BaseUrl", "http://129.151.223.141" }  // Her bruger vi den rigtige base URL
             };
+
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
@@ -31,13 +31,14 @@ namespace Tests.tests
         [Test]
         public void GetBaseUrl_ShouldThrowException_WhenNoBaseUrlConfigured()
         {
-            var inMemorySettings = new Dictionary<string, string> { };
+            var inMemorySettings = new Dictionary<string, string?>(); // Ingen baseurl
             var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
+                .AddInMemoryCollection(inMemorySettings) // Tilføj en tom indsamling
                 .Build();
 
             _configurator = new ApplicationConfigurator(configuration);
 
+            // Tester, at en InvalidOperationException kastes, når der ikke er nogen BaseUrl
             Assert.Throws<InvalidOperationException>(() => _configurator.GetBaseUrl());
         }
     }

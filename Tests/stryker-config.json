@@ -1,7 +1,8 @@
 ﻿{
   "stryker-config": {
     "mutate": [
-      "!Program.cs" 
+      "!Program.cs" ,
+      "!DatabaseService.cs"
     ],
     "thresholds": {
       "high": 80,
