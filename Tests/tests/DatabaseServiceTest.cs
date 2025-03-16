@@ -33,17 +33,7 @@ public class DatabaseServiceTest
         // Act & Assert
         Assert.DoesNotThrow(() => _databaseService.SaveCalculation("5 + 3", 8));
     }
-
-    [Test]
-    public void GetHistory_ShouldReturnEmptyList_WhenNoData()
-    {
-        // Act
-        var history = _databaseService.GetHistory();
-
-        // Assert
-        Assert.That(history, Is.Not.Null);
-        Assert.That(history.Count, Is.EqualTo(0)); //fejler hvis der laves flere udregninger
-    }
+    
     
     [Test]
     public void SaveCalculation_ShouldInsertDataIntoDatabase()

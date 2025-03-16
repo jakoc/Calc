@@ -51,6 +51,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
+          DATABASE_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
           
         run: |
           mkdir -p ~/.ssh

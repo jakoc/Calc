@@ -19,20 +19,19 @@ Console.WriteLine($"Starter server på: {appUrl}");
 builder.WebHost.UseUrls(appUrl);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowSpecificOrigin", policy =>
+    {
+        policy.WithOrigins("http://129.151.223.141")  // Tillad kun dette domæne
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
 });
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<DatabaseService>();
 
 var app = builder.Build();
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigin");
 
 app.UseStaticFiles();
 app.MapGet("/", (context) =>
