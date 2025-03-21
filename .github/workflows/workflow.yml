@@ -85,8 +85,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install K6
-        run: sudo apt-get update && sudo apt-get install -y k6
+      - name: Install K6 (via official K6 repository)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg software-properties-common
+          sudo wget -q -O - https://dl.k6.io/key.gpg | sudo apt-key add -
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
 
       - name: Run K6 Load Test
         run: k6 run Tests/tests/k6-test.js
@@ -99,14 +105,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install necessary dependencies
+      - name: Install Firefox + dependencies
         run: |
           sudo apt update
           sudo apt install -y firefox
-          sudo apt install -y libx11-xcb1 libdbus-glib-1-2
+          sudo apt install -y libx11-xcb1 libdbus-glib-1-2 libgtk-3-0 libasound2 libnss3 libxss1 libx11-xcb-dev libxcomposite1 libxcursor1 libxdamage1 libxi6 libxtst6 x11-utils xvfb
 
       - name: Install TestCafé
         run: npm install -g testcafe
 
-      - name: Run E2E test with Firefox in headless mode
-        run: testcafe firefox:headless Tests/tests/e2e-test.js --browser-init-timeout 50000
+      - name: Run E2E tests with Firefox in headless mode using Xvfb
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          export DISPLAY=:99
+          testcafe firefox:headless Tests/tests/e2e-test.js --browser-init-timeout 60000
+  
