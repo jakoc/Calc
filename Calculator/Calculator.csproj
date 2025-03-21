@@ -6,11 +6,15 @@
         <PreserveCompilationContext>true</PreserveCompilationContext>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
         <Content Update="wwwroot/**/*">
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Include="..\.dockerignore">
+          <Link>.dockerignore</Link>
         </Content>
         <PackageReference Include="MySql.Data" Version="9.2.0" />
       <PackageReference Include="Microsoft.AspnetCore.App" />  

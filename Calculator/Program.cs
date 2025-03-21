@@ -8,6 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Hent URL fra miljøvariabel eller appsettings.json
 var appUrl = new ApplicationConfigurator(builder.Configuration).GetBaseUrl();  // Brug ApplicationConfigurator her
 
+var databaseConnectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+
+if (string.IsNullOrWhiteSpace(databaseConnectionString))
+{
+    throw new InvalidOperationException("Database connection string is not configured.");
+}
+
 Console.WriteLine($"Starter server på: {appUrl}");
 
 builder.WebHost.UseUrls(appUrl);
