@@ -57,18 +57,23 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Save SSH private key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+
       - name: Deploy Docker container to server
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull jakoc/calculator:$GITHUB_SHA
+          ssh -o StrictHostKeyChecking=no -i private_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/calculator:$GITHUB_SHA
             docker stop calculator || true
             docker rm calculator || true
-            docker run -d \
-              --name calculator \
-              -p 80:80 \
-              -e DATABASE_CONNECTION_STRING="${{ vars.DATABASE_CONNECTION_STRING }}" \
-              jakoc/calculator:$GITHUB_SHA
+            docker run -d --name calculator -p 80:80 ${{ secrets.DOCKER_USERNAME }}/calculator:$GITHUB_SHA
             echo "✅ Deployment completed successfully!"
           EOF
 
