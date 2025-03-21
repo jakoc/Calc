@@ -16,15 +16,16 @@ jobs:
 
       - name: Run Flyway migrations on Staging DB
         env:
-          DB_HOST: ${{ secrets.STAGING_DB_HOST }}
-          DB_NAME: ${{ secrets.STAGING_DB_NAME }}
-          DB_USER: ${{ secrets.STAGING_DB_USER }}
+          DB_HOST: ${{ vars.STAGING_DB_HOST }}
+          DB_PORT: ${{ vars.STAGING_DB_PORT }}
+          DB_NAME: ${{ vars.STAGING_DB_NAME }}
+          DB_USER: ${{ vars.STAGING_DB_USER }}
           DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
         run: |
           docker run --rm \
             -v $(pwd)/db/migrations:/flyway/sql \
             flyway/flyway:latest \
-            -url=jdbc:mariadb://${DB_HOST}:3306/${DB_NAME} \
+            -url=jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME} \
             -user=${DB_USER} -password=${DB_PASSWORD} migrate
 
   
