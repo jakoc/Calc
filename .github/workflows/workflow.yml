@@ -26,7 +26,9 @@ jobs:
             -v $(pwd)/db/migrations:/flyway/sql \
             flyway/flyway:latest \
             -url=jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME} \
-            -user=${DB_USER} -password=${DB_PASSWORD} migrate
+            -user=${DB_USER} -password=${DB_PASSWORD} \
+            -baselineOnMigrate=true \
+            migrate
 
   
   build:
