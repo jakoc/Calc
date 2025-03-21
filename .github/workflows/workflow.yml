@@ -49,9 +49,10 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/calculator:$GITHUB_SHA .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/calculator:$GITHUB_SHA -f Calculator/Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/calculator:$GITHUB_SHA
-
+  
+  
   # Step 3: Deploy to server
   deploy:
     needs: build
